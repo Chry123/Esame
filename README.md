@@ -1,3 +1,4 @@
+
 Esame
 
 Descrizione progetto:
@@ -30,3 +31,7 @@ ristorante.db rappresenta il database dei piatti, in cui si andrà a a Salvare i
 Modificare se ci dovessere essere delle mofifiche da svolgere e infine Eliminare il rispettivo campo.
 
 
+![Esame1](https://user-images.githubusercontent.com/73218507/117294617-23cc5d80-ae73-11eb-9626-5845056bd119.png)
+![esame2](https://user-images.githubusercontent.com/73218507/117294620-2464f400-ae73-11eb-97f6-9143ac822549.png)
+![esame3](https://user-images.githubusercontent.com/73218507/117294622-2464f400-ae73-11eb-9022-8e9fb41aba10.png)
+![esame4](https://user-images.githubusercontent.com/73218507/117294648-2b8c0200-ae73-11eb-988f-456d781819ec.png)
