@@ -1,0 +1,84 @@
+﻿@page "/allergenico"
+@inject BancaDati db
+@using System.Threading;
+
+<h3>Qui è possibile aggiungere gli allergenici</h3>
+@if (nuovo == null)
+{
+    <table class=" table table-hover">
+        <tr>
+            <th>ID</th>
+            <th>Allergeni_contenuti</th>
+            <th>Modifica</th>
+            <th>Cancellazione</th>
+        </tr>
+        @foreach (Allergeni singolo in db.allergeni)
+        {
+            <tr>
+                <td>@singolo.ID</td>
+                <td>@singolo.Allergeni_contenuti</td>
+
+
+
+                <td><button @onclick="(e => Modifica(singolo))" style="background-color:blue" class="oi oi-wrench"></button></td>
+
+                <td><button @onclick="(e => Cancella(singolo))" style="background-color:red" class="oi oi-trash"></button></td>
+
+            </tr>
+        }
+    </table>
+
+    <button @onclick="(e => Aggiungi())">nuovo</button>
+}
+else
+{
+    <p>Inserici i dati della portata e premi SALVA!</p>
+    <p>
+        <label for="allergeni_contenuti">Gli Allergeni Contenuti</label>
+        <input id="allergeni_contenuti" @bind-value="nuovo.Allergeni_contenuti" />
+    </p>
+
+    <br />
+    <button @onclick="(e => Salva())">SALVA</button>
+}
+
+
+
+@code
+{
+
+    private Allergeni nuovo;
+
+    private void Cancella(Allergeni daCancellare)
+    {
+        db.allergeni.Remove(daCancellare);
+        db.SaveChanges();
+
+    }
+
+    private void Aggiungi()
+    {
+        nuovo = new Allergeni();
+    }
+
+    private void Modifica(Allergeni daModificare)
+    {
+        nuovo = daModificare;
+    }
+
+    private void Salva()
+    {
+        if (nuovo.ID == 0)
+        {
+            db.allergeni.Add(nuovo);
+        }
+        else
+        {
+            db.allergeni.Update(nuovo);
+        }
+
+        db.SaveChanges();
+        nuovo = null;
+    }
+
+}

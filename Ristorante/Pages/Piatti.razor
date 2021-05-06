@@ -1,0 +1,152 @@
+﻿@page "/piatti"
+@inject BancaDati db
+@using System.Threading;
+
+
+
+<h1 class="text-center"> Ristorante </h1>
+
+<h3>Ecco quello che forniamo nel ristorante:</h3>
+
+
+
+@if (nuovo == null)
+{
+    <table class=" table table-hover">
+        <tr>
+            <th>ID</th>
+            <th>Tipo_portata</th>
+            <th>Allergeni_contenuti</th>
+            <th>Stagione_presentazione</th>
+            <th>Prezzo</th>
+            <th>Modifica</th>
+            <th>Cancellazione</th>
+
+        </tr>
+        @foreach (Piatto nuovo in db.piatti)
+        {
+    <tr>
+        <td>@nuovo.ID</td>
+        <td>@GetPortata(nuovo)</td>
+        <td>@GetAllergeni(nuovo)</td>
+        <td>@nuovo.Stagione_presentazione</td>
+        <td>@nuovo.Prezzo</td>
+
+
+        <td>
+            <button @onclick="(e => Modifica(nuovo))" style="background-color:blue" class="btn btn-primary">
+                <span class="oi oi-pencil" style="color: white;"></span>
+            </button>
+        </td>
+        <td>
+            <button @onclick="(e => Cancella(nuovo))" style="background-color:red" class="btn btn-danger">
+                <span class="oi oi-trash" style="color: white;"></span>
+            </button>
+        </td>
+
+    </tr>
+        }
+    </table>
+
+    <button @onclick="(e => Aggiungi())">Crea Piatto</button>
+}
+else
+{
+<EditForm class="form-group" Model="@nuovo" OnValidSubmit="@(e => Salva())">
+
+    <p>Inserici i dati del piatto e premi SALVA!</p>
+    <p>
+        <label for="ID_portata">Tipi di Portate</label>
+        <select class="form-control" id="Piatto-Portata" @bind="nuovo.ID_portate" aria-label="Seleziona la portata">
+
+            @foreach (Portata portata in db.portate)
+            {
+                <option value="@portata.ID" default>@portata.Tipo_portata</option>
+            }
+
+        </select>
+    </p>
+    <br />
+    <p>
+        <label for="ID_Allergeni">Allergeni contenuti</label>
+        <select class="form-control" id="Piatto-Allergeni" @bind="nuovo.ID_Allergeni_contenuti" aria-label="Seleziona lì allergenico">
+
+            @foreach (Allergeni allergeni in db.allergeni)
+            {
+                <option value="@allergeni.ID" default>@allergeni.Allergeni_contenuti</option>
+            }
+
+        </select>
+    </p>
+    <!--<p>
+        <label for="allergeni_contenuti">Allergeni contenuti</label>
+        <input id="allergeni_contenuti" @bind-value="nuovo.Allergeni_contenuti" />
+    </p>
+    -->
+    <p>
+        <label for="stagione_presentazione">Stagione di presentazione</label>
+        <input id="stagione_presentazione" @bind-value="nuovo.Stagione_presentazione" />
+    </p>
+    <p>
+        <label for="titolo">Prezzo del piatto</label>
+        <input id="titolo" @bind-value="nuovo.Prezzo" />
+    </p>
+    <button>SALVA</button>
+
+</EditForm>
+}
+
+
+
+
+
+
+@code {
+
+    private Piatto nuovo;
+
+    private void Cancella(Piatto daCancellare)
+    {
+        db.piatti.Remove(daCancellare);
+        db.SaveChanges();
+    }
+
+    private void Aggiungi()
+    {
+        nuovo = new Piatto();
+    }
+
+    public void Modifica(Piatto daModificare)
+    {
+        nuovo = daModificare;
+    }
+
+    private void Salva()
+    {
+        if (nuovo.ID == 0)
+        {
+            db.piatti.Add(nuovo);
+        }
+        else
+        {
+            db.piatti.Update(nuovo);
+        }
+
+        db.SaveChanges();
+        nuovo = null;
+    }
+
+    public string GetPortata(Piatto piatto)
+    {
+        Portata portate = db.portate.Single(port => port.ID == piatto.ID_portate);
+        return portate.Tipo_portata;
+    }
+
+    public string GetAllergeni(Piatto piatto)
+    {
+        Allergeni allergeni = db.allergeni.Single(al => al.ID == piatto.ID_Allergeni_contenuti);
+        return allergeni.Allergeni_contenuti;
+    }
+
+
+}

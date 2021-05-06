@@ -1,0 +1,84 @@
+﻿@page "/portate"
+@inject BancaDati db
+@using System.Threading;
+
+<h3>Qui è possibile aggiungere altri tipi di portata</h3>
+@if (nuovo == null)
+{
+    <table class=" table table-hover">
+        <tr>
+            <th>ID</th>
+            <th>Tipo_portata</th>
+            <th>Modifica</th>
+            <th>Cancellazione</th>
+        </tr>
+        @foreach (Portata singolo in db.portate)
+        {
+            <tr>
+                <td>@singolo.ID</td>
+                <td>@singolo.Tipo_portata</td>
+                
+
+
+                <td><button @onclick="(e => Modifica(singolo))" style="background-color:blue" class="oi oi-wrench"></button></td>
+
+                <td><button @onclick="(e => Cancella(singolo))" style="background-color:red" class="oi oi-trash"></button></td>
+
+            </tr>
+        }
+    </table>
+
+    <button @onclick="(e => Aggiungi())">nuovo</button>
+}
+else
+{
+    <p>Inserici i dati della portata e premi SALVA!</p>
+    <p>
+        <label for="tipo_portata">Tipo della portata</label>
+        <input id="tipo_portata" @bind-value="nuovo.Tipo_portata" />
+    </p>
+
+    <br />
+    <button @onclick="(e => Salva())">SALVA</button>
+}
+
+
+
+@code
+{
+
+    private Portata nuovo;
+
+    private void Cancella(Portata daCancellare)
+    {
+        db.portate.Remove(daCancellare);
+        db.SaveChanges();
+
+    }
+
+    private void Aggiungi()
+    {
+        nuovo = new Portata();
+    }
+
+    private void Modifica(Portata daModificare)
+    {
+        nuovo = daModificare;
+    }
+
+    private void Salva()
+    {
+        if (nuovo.ID == 0)
+        {
+            db.portate.Add(nuovo);
+        }
+        else
+        {
+            db.portate.Update(nuovo);
+        }
+
+        db.SaveChanges();
+        nuovo = null;
+    }
+
+}
